@@ -156,7 +156,7 @@ class TestLLMService:
         metadata = await llm_service.extract_metadata(text)
         
         # Should return fallback metadata
-        assert metadata["title"] == "Untitled"
+        assert metadata["title"] == "Analysis Failed - Manual Review Required"
         assert metadata["topics"] == ["general", "information", "content"]
         assert metadata["sentiment"] == "neutral"
     
@@ -292,7 +292,7 @@ class TestLLMService:
         metadata = await llm_service.extract_metadata(text)
         
         # Should return fallback metadata on error
-        assert metadata["title"] == "Untitled"
+        assert metadata["title"] == "Analysis Failed - Manual Review Required"
         assert metadata["topics"] == ["general", "information", "content"]
         assert metadata["sentiment"] == "neutral"
 

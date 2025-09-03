@@ -1,19 +1,15 @@
-import json
 import re
+import json
 import asyncio
 import hashlib
-from typing import Dict, Any, Optional, Union
 from openai import AsyncOpenAI
-from app.core.config import get_settings, setup_logging, get_logger
 from app.schemas import Metadata
+from typing import Dict, Any, Optional, Union
+from app.core.config import get_settings, setup_logging, get_logger
 
 settings = get_settings()
 setup_logging(settings)
 logger = get_logger(__name__)
-
-
-
-
 
 class LLMService:
     """Service wrapper for OpenAI LLM operations."""
@@ -211,6 +207,11 @@ class MockLLMService:
 def get_llm_service() -> Union[LLMService, MockLLMService]:
     """Factory function to get appropriate LLM service."""
     try:
+        settings = get_settings()
+        if not settings.OPENAI_API_KEY:
+            logger.warning("OpenAI API key not available, using mock service")
+            return MockLLMService()
+
         return LLMService()
     except ValueError:
         logger.warning("OpenAI API key not available, using mock service")
