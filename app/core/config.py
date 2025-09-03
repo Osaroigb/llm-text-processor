@@ -88,11 +88,12 @@ class Settings(
 ):
     """Main settings class that combines all configuration sections."""
     
-    class Config:
-        env_file = '.env'
-        env_file_encoding = 'utf-8'
-        extra = 'ignore'
-        case_sensitive = False
+    model_config = {
+        'env_file': '.env',
+        'env_file_encoding': 'utf-8',
+        'extra': 'ignore',
+        'case_sensitive': False
+    }
 
 
 @lru_cache()

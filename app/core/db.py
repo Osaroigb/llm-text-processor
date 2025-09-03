@@ -1,5 +1,5 @@
 from typing import AsyncGenerator
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import declarative_base
 from app.core import get_settings, setup_logging, get_logger
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 
