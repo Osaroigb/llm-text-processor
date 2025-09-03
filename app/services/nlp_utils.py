@@ -1,5 +1,4 @@
 import re
-import nltk
 from nltk.tag import pos_tag
 from functools import lru_cache
 from collections import Counter
@@ -7,13 +6,6 @@ from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from typing import List, Tuple, Set, Dict, Union
 from nltk.tokenize import word_tokenize, sent_tokenize
-
-# Download required NLTK data once at module level
-nltk.download('punkt', quiet=True)
-nltk.download('averaged_perceptron_tagger', quiet=True)
-nltk.download('stopwords', quiet=True)
-nltk.download('wordnet', quiet=True)
-
 
 @lru_cache(maxsize=1)
 def _get_default_processor() -> 'NLPProcessor':

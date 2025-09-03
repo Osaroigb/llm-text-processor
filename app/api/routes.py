@@ -1,12 +1,11 @@
-from app.models.analysis import Analysis, SentimentEnum
-from sqlalchemy import select, or_, func
 from app.core.db import get_async_db as get_db
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select, or_, func, String
 from app.services.nlp_utils import extract_keywords
 from app.services.llm_service import get_llm_service
+from app.models.analysis import Analysis, SentimentEnum
 from app.core.config import get_settings, setup_logging, get_logger
 from fastapi import APIRouter, Depends, HTTPException, status, Query
-from typing import Literal
 
 from app.schemas.analysis import (
     AnalyzeRequest, 
@@ -85,8 +84,8 @@ async def search_analyses(
                 or_(
                     Analysis.text.ilike(f"%{keyword}%"),
                     Analysis.summary.ilike(f"%{keyword}%"),
-                    # Use JSON contains for exact keyword matches (faster than ILIKE)
-                    Analysis.keywords.contains([keyword])
+                    # Convert JSON keywords to text for searching
+                    func.cast(Analysis.keywords, String).ilike(f"%{keyword}%")
                 )
             )
         
@@ -100,8 +99,8 @@ async def search_analyses(
                 or_(
                     Analysis.text.ilike(f"%{keyword}%"),
                     Analysis.summary.ilike(f"%{keyword}%"),
-                    # Use JSON contains for exact keyword matches (faster than ILIKE)
-                    Analysis.keywords.contains([keyword])
+                    # Convert JSON keywords to text for searching
+                    func.cast(Analysis.keywords, String).ilike(f"%{keyword}%")
                 )
             )
         if sentiment:

@@ -3,7 +3,7 @@ from pydantic import BaseModel, Field, field_validator
 
 class Metadata(BaseModel):
     """Pydantic model for LLM metadata validation."""
-    title: str = Field(default="Untitled", max_length=50)
+    title: str = Field(default="No Title Generated", max_length=50)
     topics: list[str] = Field(default_factory=lambda: ["general", "information", "content"])
     sentiment: str = Field(default="neutral")
 

@@ -85,7 +85,7 @@ Summary:"""
         """Extract structured metadata from text using LLM."""
         try:
             prompt = f"""Analyze the following text and extract metadata. Respond ONLY with a valid JSON object containing these exact fields:
-- title: A concise title (max 50 chars)
+- title: A descriptive, specific title that captures the main topic (max 50 chars, be specific and informative)
 - topics: An array of exactly 3 key topics/themes (max 20 chars each)
 - sentiment: One of: "positive", "neutral", or "negative"
 
@@ -152,7 +152,7 @@ JSON:"""
     def _get_fallback_metadata(self) -> Dict[str, Any]:
         """Return fallback metadata when LLM extraction fails."""
         return {
-            "title": "Untitled",
+            "title": "Analysis Failed - Manual Review Required",
             "topics": ["general", "information", "content"],
             "sentiment": "neutral"
         }

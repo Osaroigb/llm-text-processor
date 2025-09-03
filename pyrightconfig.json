@@ -4,5 +4,13 @@
   "pythonVersion": "3.12",
   "reportMissingImports": true,
   "reportMissingModuleSource": true,
-  "include": ["app"]
+  "include": ["app"],
+  "exclude": [
+    "**/node_modules",
+    "**/__pycache__",
+    ".venv",
+    "tests"
+  ],
+  "typeCheckingMode": "basic",
+  "useLibraryCodeForTypes": true
 }
