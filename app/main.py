@@ -5,6 +5,7 @@ from app.core.db import close_db, init_db
 from contextlib import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
 from app.schemas import HomeResponse, HealthResponse
+from app.api.routes import router as analysis_router
 from app.core import get_settings, setup_logging, get_logger
 
 # Get settings and setup logging
@@ -46,6 +47,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Include routers
+app.include_router(analysis_router)
 
 @app.get("/favicon.ico", include_in_schema=False)
 async def favicon():
