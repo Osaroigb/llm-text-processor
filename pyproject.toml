@@ -17,6 +17,7 @@ alembic = "^1.16.5"
 pydantic-settings = "^2.10.1"
 openai = "^1.104.2"
 nltk = "^3.9.1"
+colorlog = "^6.9.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.4.1"
