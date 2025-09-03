@@ -150,7 +150,8 @@ JSON:"""
         return {
             "title": "Analysis Failed - Manual Review Required",
             "topics": ["general", "information", "content"],
-            "sentiment": "neutral"
+            "sentiment": "neutral",
+            "keywords": []
         }
     
     async def analyze_text(self, text: str, model: Optional[str] = None) -> Dict[str, Any]:
@@ -193,7 +194,8 @@ class MockLLMService:
                 f"theme_{text_hash[6:12]}",
                 f"subject_{text_hash[12:18]}"
             ],
-            "sentiment": "neutral"
+            "sentiment": "neutral",
+            "keywords": []
         }
     
     async def analyze_text(self, text: str, model: Optional[str] = None) -> Dict[str, Any]:

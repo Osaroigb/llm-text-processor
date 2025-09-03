@@ -13,8 +13,6 @@ class AnalysisResponse(BaseModel):
     text: str
     summary: str
     metadata: Dict[str, Any]
-    sentiment: str
-    keywords: List[str]
     created_at: datetime
 
 

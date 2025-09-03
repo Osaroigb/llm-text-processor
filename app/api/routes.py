@@ -1,9 +1,10 @@
+from app.models.analysis import Analysis
+from app.schemas.llm import SentimentEnum
 from app.core.db import get_async_db as get_db
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, or_, func, String
 from app.services.nlp_utils import extract_keywords
 from app.services.llm_service import get_llm_service
-from app.models.analysis import Analysis, SentimentEnum
 from app.core.config import get_settings, setup_logging, get_logger
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 
@@ -32,16 +33,18 @@ async def analyze_text(
         # Perform text analysis
         analysis_result = await llm_service.analyze_text(request.text)
         
-        # Extract keywords using NLP utils
-        keywords = extract_keywords(request.text, top_n=5)
+        # Extract keywords using NLP utils (limit to 3 most frequent nouns)
+        keywords = extract_keywords(request.text, top_n=3)
+        
+        # Add keywords to metadata
+        metadata_with_keywords = analysis_result["metadata"].copy()
+        metadata_with_keywords["keywords"] = keywords
         
         # Create analysis record
         analysis = Analysis(
             text=request.text,
             summary=analysis_result["summary"],
-            analysis_metadata=analysis_result["metadata"],
-            sentiment=analysis_result["metadata"]["sentiment"],
-            keywords=keywords
+            analysis_metadata=metadata_with_keywords
         )
         
         # Save to database
@@ -51,7 +54,6 @@ async def analyze_text(
         
         # Convert model to dict (metadata already mapped in to_dict())
         analysis_dict = analysis.to_dict()
-        analysis_dict["keywords"] = keywords
         
         # Return response
         return AnalysisResponse(**analysis_dict)
@@ -84,13 +86,14 @@ async def search_analyses(
                 or_(
                     Analysis.text.ilike(f"%{keyword}%"),
                     Analysis.summary.ilike(f"%{keyword}%"),
-                    # Convert JSON keywords to text for searching
-                    func.cast(Analysis.keywords, String).ilike(f"%{keyword}%")
+                    # Search within metadata keywords
+                    func.cast(Analysis.analysis_metadata['keywords'], String).ilike(f"%{keyword}%")
                 )
             )
         
         if sentiment:
-            query = query.where(Analysis.sentiment == sentiment)
+            # Filter by sentiment in the metadata JSON field using JSON extraction
+            query = query.where(func.json_extract_path_text(Analysis.analysis_metadata, 'sentiment') == sentiment.value)
         
         # Get total count (optimized)
         count_query = select(func.count()).select_from(Analysis)
@@ -99,12 +102,13 @@ async def search_analyses(
                 or_(
                     Analysis.text.ilike(f"%{keyword}%"),
                     Analysis.summary.ilike(f"%{keyword}%"),
-                    # Convert JSON keywords to text for searching
-                    func.cast(Analysis.keywords, String).ilike(f"%{keyword}%")
+                    # Search within metadata keywords
+                    func.cast(Analysis.analysis_metadata['keywords'], String).ilike(f"%{keyword}%")
                 )
             )
         if sentiment:
-            count_query = count_query.where(Analysis.sentiment == sentiment)
+            # Filter by sentiment in the metadata JSON field using JSON extraction
+            count_query = count_query.where(func.json_extract_path_text(Analysis.analysis_metadata, 'sentiment') == sentiment.value)
         
         total_result = await db.execute(count_query)
         total = total_result.scalar() or 0

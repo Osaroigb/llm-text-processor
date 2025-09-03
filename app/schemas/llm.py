@@ -1,17 +1,18 @@
+import enum
 from pydantic import BaseModel, Field, field_validator
 
+class SentimentEnum(str, enum.Enum):
+    """Enum for sentiment values to ensure type safety across API."""
+    positive = "positive"
+    neutral = "neutral"
+    negative = "negative"
 
 class Metadata(BaseModel):
     """Pydantic model for LLM metadata validation."""
     title: str = Field(default="No Title Generated", max_length=50)
     topics: list[str] = Field(default_factory=lambda: ["general", "information", "content"])
-    sentiment: str = Field(default="neutral")
-
-    @field_validator("sentiment", mode="before")
-    @classmethod
-    def normalize_sentiment(cls, v):
-        """Normalize sentiment to valid values."""
-        return v if v in ["positive", "neutral", "negative"] else "neutral"
+    sentiment: SentimentEnum = Field(default=SentimentEnum.neutral)
+    keywords: list[str] = Field(default_factory=lambda: [])
 
     @field_validator("topics", mode="before")
     @classmethod

@@ -4,8 +4,8 @@ A lightweight FastAPI service that ingests unstructured text, generates LLM-base
 
 ## 🚀 Features
 
-- **Text Analysis**: LLM-powered text summarization and sentiment analysis
-- **NLP Processing**: Keyword extraction using NLTK with configurable parameters
+- **Text Analysis**: LLM-powered text summarization, sentiment analysis, and topic extraction
+- **NLP Processing**: Keyword extraction using NLTK with configurable parameters, stored in metadata
 - **Structured Storage**: PostgreSQL database with optimized search capabilities
 - **RESTful API**: FastAPI endpoints for analysis and search operations
 - **Type Safety**: Pydantic schemas and SQLAlchemy models with strong typing
