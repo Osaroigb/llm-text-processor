@@ -1,0 +1,31 @@
+[tool.poetry]
+name = "llm-text-processor"
+version = "0.1.0"
+description = "API for processing text using LLM-based analysis and PostgreSQL storage"
+authors = ["Osaro Igbinovia <emmyigbinovia@gmail.com>"]
+license = "MPL-2.0"
+readme = "README.md"
+packages = [{ include = "app" }]
+
+[tool.poetry.dependencies]
+python = ">=3.12"
+fastapi = "^0.116.1"
+uvicorn = { extras = ["standard"], version = "^0.35.0" }
+sqlalchemy = { extras = ["asyncio"], version = "^2.0.43" }
+asyncpg = "^0.30.0"
+alembic = "^1.16.5"
+pydantic-settings = "^2.10.1"
+openai = "^1.104.2"
+nltk = "^3.9.1"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.4.1"
+pytest-asyncio = "^1.1.0"
+httpx = "^0.28.1"
+black = "^25.1.0"
+isort = "^6.0.1"
+mypy = "^1.17.1"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
